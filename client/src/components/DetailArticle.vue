@@ -3,8 +3,20 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="box box-warning">
-                    <p>{{ objPost.title }}</p>
-                    <p>{{ objPost.body }}</p>
+                    <div class="box-body">
+                        <h1 class="col-md-8 col-md-offset-2">Update Article</h1>
+                        <div class="form-group col-md-8 col-md-offset-2">
+                            <label>Your Article Title</label>
+                            <input type="text" class="form-control" placeholder="Article Title ..." v-model="objToUpdate.title">
+                        </div>
+                        <div class="form-group col-md-8 col-md-offset-2">
+                            <label>Your Article Body</label>
+                            <textarea class="form-control" rows="10" placeholder="Write Some Story ..." v-model="objToUpdate.articleBody"></textarea>
+                        </div>
+                        <div class="form-group col-md-8 col-md-offset-2">
+                            <button type="submit" class="btn btn-warning" @click="updateArticle">Update</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -12,37 +24,30 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { mapGetters } from 'vuex'
 
 export default {
   props: ['id'],
   name: 'DetailArticle',
-  data: function () {
-    return {
-      objPost: {
-        title: ``,
-        body: ``
-      }
-    }
+  computed: {
+    ...mapGetters({
+      objToUpdate: 'getActiveArticle'
+    })
   },
   methods: {
-    getToDo: function () {
-      axios.get(`http://localhost:3000/api/articles/${this.id}`, {})
-        .then((article) => {
-          this.objPost.title = article.data.data.title
-          this.objPost.body = article.data.data.articleBody
-        })
-        .catch((err) => {
-          console.log(err)
+    updateArticle: function () {
+      this.$store.dispatch('updateArticleById', this.objToUpdate)
+        .then(() => {
+          this.$router.push({name: `userdetailarticle`})
         })
     }
   },
   created: function () {
-    this.getToDo()
+    this.$store.dispatch('getArticleById', this.id)
   },
   watch: {
     id () {
-      this.getToDo()
+      this.$store.dispatch('getArticleById', this.id)
     }
   }
 }

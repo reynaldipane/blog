@@ -1,8 +1,8 @@
 <template>
   <div>
     <app-header></app-header>
-    <app-sidebar></app-sidebar>
     <div class="content-wrapper">
+        <h3>Hallo, {{objUserActive.name}}</h3>
         <router-view/>
     </div>
   </div>
@@ -10,8 +10,8 @@
 
 <script>
 import Header from '@/components/Header'
-import Sidebar from '@/components/Sidebar'
 import FormArticle from '@/components/FormArticle'
+import { mapGetters } from 'vuex'
 
 export default {
   props: ['path'],
@@ -21,9 +21,13 @@ export default {
       isActive: true
     }
   },
+  computed: {
+    ...mapGetters({
+      objUserActive: 'getActiveUser'
+    })
+  },
   components: {
     'app-header': Header,
-    'app-sidebar': Sidebar,
     'app-formarticle': FormArticle
   }
 }

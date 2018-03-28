@@ -4,7 +4,8 @@ module.exports  = {
     create: (req,res) => {
         Article.create({
             title: req.body.title,
-            articleBody: req.body.articleBody
+            articleBody: req.body.articleBody,
+            userid: req.body.userid
         }, (err, newArticle) => {
             if (err) {
                 res.status(404).json({
@@ -23,6 +24,7 @@ module.exports  = {
     read: (req,res) => {
         Article.find()
         .sort({createdAt:-1})
+        .populate('userid')
         .exec()
         .then(articles => {
             res.status(200).json({
@@ -31,8 +33,28 @@ module.exports  = {
             })
         })
         .catch(err=>{
+            console.log(err)
             res.status(400).json({
                 message: `Get All Article Error !`,
+                data: {}
+            })
+        })
+    },
+
+    readUserArticle: (req,res) => {
+        Article.find({ userid:req.params.id })
+        .sort({createdAt:-1})
+        .exec()
+        .then(articles => {
+            res.status(200).json({
+                message: `Get All Article Success !`,
+                data: articles
+            })
+        })
+        .catch(err=>{
+            console.log(err)
+            res.status(202).json({
+                message: `No Article Found !`,
                 data: {}
             })
         })
@@ -75,6 +97,7 @@ module.exports  = {
 
     readById: (req,res) => {
         Article.findById(req.params.id)
+        .populate('userid')
         .exec()
         .then((article) => {
             res.status(200).json({

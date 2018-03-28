@@ -8,12 +8,21 @@
                             <tbody>
                             <tr>
                                 <th style="text-align:center;">Article Title</th>
+                                <th style="text-align:center;">Action</th>
                             </tr>
-                            <tr v-for="(article,i) in articles" :key='i'>
+                            <tr v-for="(article,i) in arrUserArticle" :key='i'>
                                     <td>
-                                        <router-link :to="{name: 'tablearticle', params: {id: article._id}}">
                                           {{article.title}}
+                                    </td>
+                                    <td>
+                                        <router-link :to="{name: 'userdetailarticle', params: {id: article._id}}">
+                                          <button class="btn btn-warning">
+                                            <i class="glyphicon glyphicon-pencil"></i>
+                                          </button>
                                         </router-link>
+                                        <button class="btn btn-danger" @click="deleteData(article._id)">
+                                          <i class="glyphicon glyphicon-trash"></i>
+                                        </button>
                                     </td>
                             </tr>
                             </tbody>
@@ -29,7 +38,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'TableArticle',
@@ -39,14 +48,24 @@ export default {
       singleArticle: ``
     }
   },
+  methods: {
+    deleteData (id) {
+      this.$store.dispatch('deleteArticleById', id)
+        .then(() => {
+          this.$router.push({path: '/dashboard/readarticle'})
+        })
+    }
+  },
+  computed: {
+    ...mapGetters({
+      arrUserArticle: 'getArrUserArticle'
+    })
+  },
   created: function () {
-    axios.get('http://localhost:3000/api/articles', {})
-      .then((articles) => {
-        this.articles = articles.data.data
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    this.$store.dispatch('getUserArticle')
+  },
+  updated: function () {
+    this.$store.dispatch('getUserArticle')
   }
 }
 </script>

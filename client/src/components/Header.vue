@@ -1,31 +1,37 @@
 <template>
-    <header class="main-header">
-        <a href="index2.html" class="logo" style="height:65px;position:fixed">
-            <span class="logo-mini"><b>M</b>BG</span>
-            <span class="logo-lg"><b>My</b>Blog</span>
-        </a>
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Blogs Panel</a>
+      </div>
 
-        <nav class="navbar navbar-static-top" role="navigation">
-            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-            <span class="sr-only">Toggle navigation</span>
-            </a>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li><router-link :to="{name: 'NewArticle'}"><i class="fa fa-book"></i> <span>New Article</span></router-link></li>
+          <li><router-link :to="{path: '/dashboard/readarticle'}"><i class="fa fa-child"></i> <span>My Article</span></router-link></li>
+          <button type="button" class="btn btn-default navbar-btn" @click="signOut">Log Out</button>
+        </ul>
+      </div>
 
-            <div class="navbar-custom-menu">
-                <ul class="nav navbar-nav">
-                    <li class="dropdown user user-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="btn btn-danger">Logout</i>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </header>
+    </div>
+  </nav>
 </template>
 
 <script>
 export default {
-  name: 'Header'
+  name: `Header`,
+  methods: {
+    signOut () {
+      this.$store.dispatch('signOut')
+      this.$router.push({path: '/'})
+    }
+  }
 }
 </script>
 
